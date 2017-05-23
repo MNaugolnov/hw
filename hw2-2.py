@@ -16,5 +16,5 @@ def quater(x, y):
 
 x = float(input('Введите координату Х:'))
 y = float(input('Введите координату Y:'))
-    
+
 print ('Точка лежит {}'.format(quater(x, y)))
