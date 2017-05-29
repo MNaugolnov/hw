@@ -26,8 +26,9 @@ def obrabotchik():
             z.zadacha5()
         elif dey == 6:
             z.zadacha6()
+            break
         else:
             print('Такого действия нет. Введите число от 1 до 6')
-            break
+
 obrabotchik()
         
