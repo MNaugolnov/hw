@@ -39,7 +39,7 @@ def act_update_well():
         drilled = 'Пробурена'
 
         with get_conn() as conn:
-            z.z_update(conn, idu, long_well_name, field_name, drilled)
+            z.z_update(conn, long_well_name, field_name, drilled, idu)
             print('Скважина отредактирована')
         ok = True
 
@@ -58,10 +58,10 @@ def act_undrilled_well():
     ok = False
 
     while not ok:
-        id = int(input('\nВведите ID непробуренной скв.: '))
+        idu = int(input('\nВведите ID непробуренной скв.: '))
 
         with get_conn() as conn:
-            z.z_undrilled(conn, id)
+            z.z_undrilled(conn, idu)
             print('Скважина не пробурена')
         ok = True
 

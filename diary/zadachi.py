@@ -65,15 +65,15 @@ def z_add_new(conn, long_well_name, field_name, drilled):
 
     cursor = conn.execute(SQL_INSERT_WELL, (long_well_name, field_name, drilled))
           
-def z_update(conn, idu, long_well_name, field_name, drilled):
+def z_update(conn, long_well_name, field_name, drilled, idu):
 
-    cursor = conn.execute(SQL_UPDATE_WELL, (id, long_well_name, field_name, drilled))
+    cursor = conn.execute(SQL_UPDATE_WELL, (long_well_name, field_name, drilled, idu))
 
 def z_drilled(conn, idu):
-    cursor = conn.execute(SQL_STATUS_WELLD, id)
+    cursor = conn.execute(SQL_STATUS_WELLD, idu)
 
 def z_undrilled(conn, idu):
-    cursor = conn.execute(SQL_STATUS_WELLU, id)
+    cursor = conn.execute(SQL_STATUS_WELLU, idu)
 
 def find_well_by_longname(conn, long_well_name):
 
