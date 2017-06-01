@@ -6,7 +6,7 @@ import os.path as Path
 
 SQL_SELECT_ALL = '''
     SELECT
-        id, field_name, long_well_name, drilled
+        id, long_well_name, field_name, drilled
     FROM
         welldiary
 '''
@@ -22,6 +22,25 @@ SQL_INSERT_WELL = '''
     )
 '''
 
+SQL_UPDATE_WELL = '''
+    UPDATE welldiary(
+        long_well_name  
+    ) SET (
+        ?
+    )
+'''
+
+SQL_STATUS_WELL = '''
+    SELECT CASE (
+    drilled
+    )
+    WHEN "1" THEN "Well is drilled"
+    ELSE "Well is not drilled"
+    END
+    FROM
+        welldiary
+'''
+
 def connect(db_name=None):
     if db_name is None:
         db_name = ':memory:'
@@ -32,43 +51,46 @@ def connect(db_name=None):
 
 def initialize(conn):
     with conn:
-        script_file_path = Path.join(Path.dirname(__file__), 'sqlbase.sql')
+        script_file_path = Path.join(Path.dirname(__file__), 'sqlitebd.sql')
         
         with open(script_file_path) as f:
             conn.executescript(f.read())
 
-def zadacha1():
-    print('Эта функция будет выводить список всех скважин со статусом бурения за указанный день. По умолчанию, за текущий день.')
-
-def zadacha2(conn, long_well_name):
-    print('Эта функция пытается добавлять новую скважину в указанную дату.')
-
+def z_vyvod_vseh(conn):
+    with conn:
+        cursor = conn.execute(SQL_SELECT_ALL)
+        return cursor.fetchall()
+    
+def z_add_new(conn, long_well_name):
     if not long_well_name:
-        print('Ошибка! Введите полное имя скважины')
+        # Здесь должна быть ошибка
         return
 
     with conn:
-        found = find_well_by_longname(conn,  ) 
+        found = find_well_by_longname(conn, long_well_name)
 
         if found:
             return found[2]
 
         cursor = conn.execute(SQL_INSERT_WELL, (long_well_name,))
 
-        # Здесь будет обработчик по добавлению
+        # Здесь магия
         return
-
           
-def zadacha3():
+def z_update():
     print('Эта функция будет редактировать параметры скважины, используя уникальный идентификатор в БД. Если скважина не найдена, то выводится ошибка.')
 
-def zadacha4():
+def z_drilled():
     print('Эта функция будет менять статус скважины на Пробурена.')
    
-def zadacha5():
+def z_undrilled():
     print('Эта функция будет менять статус скважины на Не пробурена.')
           
-def zadacha6():
-    print('Выход.')
-    
+def find_well_by_longname(conn, long_well_name):
+
+    with conn:
+        cursor = conn.execute(
+            SQL_SELECT_WELL_BY_LONGNAME, (long_well_name,)
+        )
+        return cursor.fetchone()
 
