@@ -51,7 +51,7 @@ def connect(db_name=None):
 
 def initialize(conn):
     with conn:
-        script_file_path = Path.join(Path.dirname(__file__), 'sqlitebd.sql')
+        script_file_path = Path.join(Path.dirname(__file__), 'baza.sql')
         
         with open(script_file_path) as f:
             conn.executescript(f.read())
@@ -93,4 +93,3 @@ def find_well_by_longname(conn, long_well_name):
             SQL_SELECT_WELL_BY_LONGNAME, (long_well_name,)
         )
         return cursor.fetchone()
-
