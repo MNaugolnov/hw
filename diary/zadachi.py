@@ -16,30 +16,30 @@ SQL_SELECT_WELL_BY_LONGNAME = SQL_SELECT_ALL + ' WHERE long_well_name=?'
 
 SQL_INSERT_WELL = '''
     INSERT INTO welldiary(
-        long_well_name  
+        long_well_name, field_name, drilled
     ) VALUES (
-        ?
+        ?, ?, ?
     )
 '''
 
 SQL_UPDATE_WELL = '''
-    UPDATE welldiary(
-        long_well_name  
-    ) SET (
-        ?
-    )
+    UPDATE welldiary
+    SET long_well_name=? , field_name=?, drilled=?
+    WHERE ID=?
 '''
 
-SQL_STATUS_WELL = '''
-    SELECT CASE (
-    drilled
-    )
-    WHEN "1" THEN "Well is drilled"
-    ELSE "Well is not drilled"
-    END
-    FROM
-        welldiary
+SQL_STATUS_WELLD = '''
+    UPDATE welldiary
+    SET drilled='Пробурена'
+    WHERE ID=?
 '''
+
+SQL_STATUS_WELLU = '''
+    UPDATE welldiary
+    SET drilled='Не пробурена'
+    WHERE ID=?
+'''
+
 
 def connect(db_name=None):
     if db_name is None:
@@ -61,31 +61,20 @@ def z_vyvod_vseh(conn):
         cursor = conn.execute(SQL_SELECT_ALL)
         return cursor.fetchall()
     
-def z_add_new(conn, long_well_name):
-    if not long_well_name:
-        # Здесь должна быть ошибка
-        return
+def z_add_new(conn, long_well_name, field_name, drilled):
 
-    with conn:
-        found = find_well_by_longname(conn, long_well_name)
-
-        if found:
-            return found[2]
-
-        cursor = conn.execute(SQL_INSERT_WELL, (long_well_name,))
-
-        # Здесь магия
-        return
+    cursor = conn.execute(SQL_INSERT_WELL, (long_well_name, field_name, drilled))
           
-def z_update():
-    print('Эта функция будет редактировать параметры скважины, используя уникальный идентификатор в БД. Если скважина не найдена, то выводится ошибка.')
+def z_update(conn, idu, long_well_name, field_name, drilled):
 
-def z_drilled():
-    print('Эта функция будет менять статус скважины на Пробурена.')
-   
-def z_undrilled():
-    print('Эта функция будет менять статус скважины на Не пробурена.')
-          
+    cursor = conn.execute(SQL_UPDATE_WELL, (id, long_well_name, field_name, drilled))
+
+def z_drilled(conn, idu):
+    cursor = conn.execute(SQL_STATUS_WELLD, id)
+
+def z_undrilled(conn, idu):
+    cursor = conn.execute(SQL_STATUS_WELLU, id)
+
 def find_well_by_longname(conn, long_well_name):
 
     with conn:

@@ -9,7 +9,7 @@ def act_vyvod_vseh():
         wells = z.z_vyvod_vseh(conn)
 
     for well in wells:
-        print('{well[field_name]} - {well[long_well_name]} - {well[drilled]}'.format(well=well))
+        print('{well[0]}. {well[1]} - {well[2]} - {well[3]}'.format(well=well))
 
 
 def act_add_well():
@@ -17,24 +17,53 @@ def act_add_well():
 
     while not ok:
         long_well_name = input('\nВведите имя скв.: ')
-
-        if not long_well_name:
-            break
-
-        if long_well_name:
-            with get_conn() as conn:
-                long_well_name = z.z_add_new(conn, long_well_name)
- 
-            ok = True
-
+        field_name = input('\nВведите имя месторождения: ')
+        drilled = 'Пробурена'
+#        if not long_well_name:
+#            break
+        
+#        if long_well_name and field_name:
+            
+        with get_conn() as conn:
+            z.z_add_new(conn, long_well_name, field_name, drilled)
+            print('Данные введены')
+        ok = True
+        
 def act_update_well():
-    pass
+    ok = False
+
+    while not ok:
+        idu = int(input('\nВведите ID редактируемой скв.: '))
+        long_well_name = input('\nВведите новое имя скв.: ')
+        field_name = input('\nВведите новое имя месторождения: ')
+        drilled = 'Пробурена'
+
+        with get_conn() as conn:
+            z.z_update(conn, idu, long_well_name, field_name, drilled)
+            print('Скважина отредактирована')
+        ok = True
 
 def act_drilled_well():
-    pass
+    ok = False
 
+    while not ok:
+        idu = int(input('\nВведите ID пробуренной скв.: '))
+
+        with get_conn() as conn:
+            z.z_drilled(conn, idu)
+            print('Скважина пробурена')
+        ok = True
+        
 def act_undrilled_well():
-    pass
+    ok = False
+
+    while not ok:
+        id = int(input('\nВведите ID непробуренной скв.: '))
+
+        with get_conn() as conn:
+            z.z_undrilled(conn, id)
+            print('Скважина не пробурена')
+        ok = True
 
 def act_show_menu():
     """Обработчик действия показать меню"""
