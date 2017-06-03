@@ -30,13 +30,13 @@ SQL_UPDATE_WELL = '''
 
 SQL_STATUS_WELLD = '''
     UPDATE welldiary
-    SET drilled='Пробурена'
+    SET drilled= 'Пробурена'
     WHERE ID=?
 '''
 
 SQL_STATUS_WELLU = '''
     UPDATE welldiary
-    SET drilled='Не пробурена'
+    SET drilled= 'Не пробурена'
     WHERE ID=?
 '''
 
@@ -70,15 +70,17 @@ def z_update(conn, long_well_name, field_name, drilled, idu):
     cursor = conn.execute(SQL_UPDATE_WELL, (long_well_name, field_name, drilled, idu))
 
 def z_drilled(conn, idu):
-    cursor = conn.execute(SQL_STATUS_WELLD, idu)
+    cursor = conn.execute(SQL_STATUS_WELLD, (idu,) )
 
+    
 def z_undrilled(conn, idu):
-    cursor = conn.execute(SQL_STATUS_WELLU, idu)
+    cursor = conn.execute(SQL_STATUS_WELLU, (idu,) )
 
-def find_well_by_longname(conn, long_well_name):
+    
+def find_well_by_id(conn, idu):
 
     with conn:
         cursor = conn.execute(
-            SQL_SELECT_WELL_BY_LONGNAME, (long_well_name,)
+            SQL_SELECT_WELL_BY_ID, (idu,)
         )
         return cursor.fetchone()

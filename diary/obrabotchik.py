@@ -95,7 +95,7 @@ def main():
         '2': act_add_well,
         '3': act_update_well,
         '4': act_drilled_well,
-        '5': act_drilled_well,
+        '5': act_undrilled_well,
         'm': act_show_menu,
         'q': act_quit
     }    
