@@ -1,20 +1,19 @@
 import string
 import random
 
-symb = string.digits + string.ascii_letters
+symb = string.digits + string.ascii_letters 
 
-def pwd(s):
+def password(s):
+    def pwd(s): 
+        i = 1
+        while i <= s: 
+            i +=1
+            yield random.choice(symb) 
+                
+    pasw = ''.join([str(i) for i in pwd(s)])
+    return pasw
 
-    i = 1
-
-    while i <= s:
-        pasi = random.choice(symb)
-        i +=1
-        yield pasi
-
-    
-s = int(input('Введите длину желаемого пароля '))
-
-pasw = ''.join([str(i) for i in pwd(s)])
-
-print(pasw)
+s = int(input('Введите длину желаемого пароля ')) 
+print(password(s)) 
+print(password(s)) 
+print(password(s)) 
