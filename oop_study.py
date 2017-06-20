@@ -2,11 +2,19 @@
 from abc import ABCMeta, abstractmethod
 import pickle
 import json
+import os
+
+source = './file.txt'
 
 #1 - абстрактный класс
+class ParamHandlerException(Exception):
+    pass
+
 
 class ParamHandler(metaclass=ABCMeta):
+
     types = {}
+
     def __init__(self, source):
         self.source = source
         self.params = {}
@@ -61,56 +69,64 @@ class ParamHandler(metaclass=ABCMeta):
 class JsonParamHandler(ParamHandler):
 
     def read(self):
-    """
-    Чтение из текстового файла и присвоение значений в self.params
-    """
+    #Чтение из текстового файла и присвоение значений в self.params
+        with open(source, 'r') as f:
+            self.params = json.load(f)
+                
     def write(self):
-    """
-    Запись в текстовый файл параметров self.params
-    """
+    #Запись в текстовый файл параметров self.params
+        with open(source, 'w') as f:
+            self.params = json.dump(data, f)
 
 class PickleParamHandler(ParamHandler):
-    def read(self):
-    """
-    Чтение в формате XML и присвоение значений в self.params
-    """
     def write(self):
-    """
-    Запись в формате XML параметров self.params
-    """
+    #Чтение в формате XML и присвоение значений в self.params
+        with open(source, 'wb') as f:
+            self.params = pickle.dump(data, f)
+
+    def read(self):
+    #Запись в формате XML параметров self.params
+        with open(source, 'rb') as f:
+            self.params = pickle.load(f)
 
 class TextParamHandler(ParamHandler):
 
-    def read(self):
-    """
-    Чтение из текстового файла и присвоение значений в self.params
-    """
     def write(self):
-    """
-    Запись в текстовый файл параметров self.params
-    """
+    #Чтение в формате XML и присвоение значений в self.params
+        with open(source, 'w') as f:
+            for key, value in self.params.items():
+                f.write(str(key) + ":" + str(value) + '\n')
+
+    def read(self):
+    #Запись в формате XML параметров self.params
+        with open(source, 'r') as f:
+            f.read()
 
 class XmlParamHandler(ParamHandler):
+
     def read(self):
-    """
-    Чтение в формате XML и присвоение значений в self.params
-    """
+    #Чтение в формате XML и присвоение значений в self.params
+        with open(source, 'w') as f:
+            for key, value in self.params.items():
+                f.write(str(key) + ":" + str(value) + '\n')
     def write(self):
-    """
-    Запись в формате XML параметров self.params
-    """
+    #Запись в формате XML параметров self.params
+        with open(source, 'r') as f:
+            f.read()    
+
+ParamHandler.add_type('json', JsonParamHandler)
+ParamHandler.add_type('pickle', PickleParamHandler)
+ParamHandler.add_type('txt', TextParamHandler)
+ParamHandler.add_type('xml', XmlParamHandler)
+
+config = ParamHandler.get_instance(source)
+
+config.add_param('key1', 'val1')
+config.add_param('key2', 'val2')
+config.add_param('key3', 'val3')
+config.add_param('key4', 'val4')
 
 
-
-
-
-
-
-
-##config = ParamHandler.get_instance('./params.xml')
-##config.add_param('key1', 'val1')
-##config.add_param('key2', 'val2')
-##config.add_param('key3', 'val3')
-##config.write() # запись файла в XML формате
-##config = ParamHandler.get_instance('./params.txt')
-##config.read() # читаем данные из текстового файла
+config.write() # запись файла в XML формате
+config = ParamHandler.get_instance(source)
+config.read() # читаем данные из текстового файла
